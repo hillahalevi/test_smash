@@ -4,18 +4,18 @@ import 'dart:convert' as convert;
 
 import 'package:frideos_core/frideos_core.dart';
 
-import '../models/category.dart';
+import '../models/test.dart';
 import '../models/question.dart';
 
 import 'api_interface.dart';
 
 class MockAPI implements QuestionsAPI {
   @override
-  Future<bool> getCategories(StreamedList<Category> categories) async {
-    categories.value = [];
+  Future<bool> getTests(StreamedList<Test> tests) async {
+    tests.value = [];
 
-    categories.addElement(
-      Category(id: 1, name: 'Category demo'),
+    tests.addElement(
+      Test(id: 1, name: 'neuro eaxm'),
     );
     return true;
   }
@@ -24,7 +24,7 @@ class MockAPI implements QuestionsAPI {
   Future<bool> getQuestions(
       {StreamedList<Question> questions,
         int number,
-        Category category,
+        Test test,
         QuestionDifficulty difficulty,
         QuestionType type}) async {
     const json =

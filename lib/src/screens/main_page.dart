@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frideos/frideos.dart';
 
 import '../models/appstate.dart';
-import '../models/category.dart';
+import '../models/test.dart';
 
 class MainPage extends StatelessWidget {
   @override
@@ -14,11 +14,11 @@ class MainPage extends StatelessWidget {
       duration: 750,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 36.0),
-        child: ValueBuilder<List<Category>>(
-          streamed: appState.categoriesStream,
+        child: ValueBuilder<List<Test>>(
+          streamed: appState.testsStream,
           noDataChild: const CircularProgressIndicator(),
           builder: (context, snapshot) {
-            final categories = snapshot.data;
+            final tests = snapshot.data;
 
             return Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -47,7 +47,7 @@ class MainPage extends StatelessWidget {
                       ),
                     ),
                     const Text(
-                      'Choose a category:',
+                      'Choose a test to smash:',
                       style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w600,
@@ -60,16 +60,16 @@ class MainPage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    ValueBuilder<Category>(
-                      streamed: appState.categoryChosen,
+                    ValueBuilder<Test>(
+                      streamed: appState.testChosen,
                       builder: (context, snapshotCategory) =>
-                          DropdownButton<Category>(
+                          DropdownButton<Test>(
                             isExpanded: true,
                             value: snapshotCategory.data,
                             onChanged: appState.setCategory,
-                            items: categories
-                                .map<DropdownMenuItem<Category>>(
-                                  (value) => DropdownMenuItem<Category>(
+                            items: tests
+                                .map<DropdownMenuItem<Test>>(
+                                  (value) => DropdownMenuItem<Test>(
                                 value: value,
                                 child: Text(
                                   value.name,

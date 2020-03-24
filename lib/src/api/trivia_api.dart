@@ -6,26 +6,26 @@ import 'package:http/http.dart' as http;
 
 import 'package:frideos_core/frideos_core.dart';
 
-import '../models/category.dart';
+import '../models/test.dart';
 import '../models/question.dart';
 
 import 'api_interface.dart';
 
 class TriviaAPI implements QuestionsAPI {
   @override
-  Future<bool> getCategories(StreamedList<Category> categories) async {
+  Future<bool> getTests(StreamedList<Test> tests) async {
     const categoriesURL = 'https://opentdb.com/api_category.php';
     final response = await http.get(categoriesURL);
 
     if (response.statusCode == 200) {
       final jsonResponse = convert.jsonDecode(response.body);
       final result = (jsonResponse['trivia_categories'] as List)
-          .map((category) => Category.fromJson(category));
+          .map((category) => Test.fromJson(category));
 
-      categories.value = [];
-      categories
+      tests.value = [];
+      tests
         ..addAll(result)
-        ..addElement(Category(id: 0, name: 'Any category'));
+        ..addElement(Test(id: 0, name: 'Any category'));
       return true;
     } else {
       print('Request failed with status: ${response.statusCode}.');
@@ -37,7 +37,7 @@ class TriviaAPI implements QuestionsAPI {
   Future<bool> getQuestions(
       {StreamedList<Question> questions,
         int number,
-        Category category,
+        Test test,
         QuestionDifficulty difficulty,
         QuestionType type}) async {
     var qdifficulty;
@@ -70,7 +70,7 @@ class TriviaAPI implements QuestionsAPI {
     }
 
     final url =
-        'https://opentdb.com/api.php?amount=$number&difficulty=$qdifficulty&type=$qtype&category=${category.id}';
+        'https://opentdb.com/api.php?amount=$number&difficulty=$qdifficulty&type=$qtype&category=${test.id}';
 
     final response = await http.get(url);
 

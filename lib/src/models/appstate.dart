@@ -10,7 +10,7 @@ import 'package:test_smash/src/blocks/trivia_bloc.dart';
 import '../API/api_interface.dart';
 import '../API/mock_api.dart';
 import '../API/trivia_api.dart';
-import '../models/category.dart';
+import '../models/test.dart';
 import '../models/models.dart';
 import '../models/question.dart';
 import '../models/theme.dart';
@@ -21,7 +21,7 @@ class AppState extends AppStateModel {
   AppState._internal() {
     print('-------APP STATE INIT--------');
     _createThemes(themes);
-    _loadCategories();
+    _loadTests();
 
     countdown.value = 10.toString();
     countdown.setTransformer(validateCountdown);
@@ -49,8 +49,8 @@ class AppState extends AppStateModel {
   final tabController = StreamedValue<AppTab>(initialData: AppTab.main);
 
   // TRIVIA
-  final categoriesStream = StreamedList<Category>();
-  final categoryChosen = StreamedValue<Category>();
+  final testsStream = StreamedList<Test>();
+  final testChosen = StreamedValue<Test>();
   final questions = StreamedList<Question>();
   final questionsDifficulty =
   StreamedValue<QuestionDifficulty>(initialData: QuestionDifficulty.medium);
@@ -102,10 +102,10 @@ class AppState extends AppStateModel {
     }
   }
 
-  Future _loadCategories() async {
-    final isLoaded = await api.getCategories(categoriesStream);
+  Future _loadTests() async {
+    final isLoaded = await api.getTests(testsStream);
     if (isLoaded) {
-      categoryChosen.value = categoriesStream.value.last;
+      testChosen.value = testsStream.value.last;
     }
   }
 
@@ -113,12 +113,12 @@ class AppState extends AppStateModel {
     await api.getQuestions(
         questions: questions,
         number: int.parse(questionsAmount.value),
-        category: categoryChosen.value,
+        test: testChosen.value,
         difficulty: questionsDifficulty.value,
         type: QuestionType.multiple);
   }
 
-  void setCategory(Category category) => categoryChosen.value = category;
+  void setCategory(Test test) => testChosen.value = test;
 
   void setDifficulty(QuestionDifficulty difficulty) =>
       questionsDifficulty.value = difficulty;
@@ -131,7 +131,7 @@ class AppState extends AppStateModel {
       } else {
         api = TriviaAPI();
       }
-      _loadCategories();
+      _loadTests();
     }
   }
 
@@ -178,7 +178,7 @@ class AppState extends AppStateModel {
   void dispose() {
     print('---------APP STATE DISPOSE-----------');
     apiType.dispose();
-    categoryChosen.dispose();
+    testChosen.dispose();
     countdown.dispose();
     currentTheme.dispose();
     questions.dispose();
